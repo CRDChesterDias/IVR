@@ -23,7 +23,7 @@
         --instance-id {{ instance_id }} \
         --name "{{ flow_name }}" \
         --type CONTACT_FLOW \
-        --content file://{{ flow_file }} \
+        --content file://ivr_contact_flow.json \
         --region {{ region }}
   register: flow_upload
 

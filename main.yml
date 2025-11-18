@@ -5,8 +5,8 @@
   gather_facts: false
 
   vars:
-    aws_region: us-east-1
-    connect_instance_alias: "my-new-connect-instance"
+    region: us-east-1
+    connect_alias: "my-new-connect-instance"
     flow_name: "Press-9-Username-EmpID-Flow"
 
   roles:
