@@ -1,6 +1,11 @@
 {
-  "Version": "2019-10-30",
+  "Version": "1.0",
   "StartAction": "startMenu",
+  "Metadata": {
+    "Name": "Press-9-Username-EmpID-Flow",
+    "Description": "IVR flow for username and employee ID capture",
+    "ContactFlowType": "CONTACT_FLOW"
+  },
   "Actions": [
     {
       "Identifier": "startMenu",
@@ -24,6 +29,7 @@
         }
       }
     },
+
     {
       "Identifier": "askUsername",
       "Type": "GetUserInput",
@@ -35,12 +41,18 @@
       "Parameters": {
         "Prompt": [
           {
-            "Text": "Please say your username after the beep."
+            "Text": "Please enter your username followed by the pound key."
           }
         ],
-        "InputType": "Speech"
+        "InputType": "DTMF",
+        "DTMFConfiguration": {
+          "MinDigits": 1,
+          "MaxDigits": 20,
+          "TerminationDigit": "#"
+        }
       }
     },
+
     {
       "Identifier": "saveUsername",
       "Type": "SetAttributes",
@@ -53,6 +65,7 @@
         "NextAction": "askEmpId"
       }
     },
+
     {
       "Identifier": "askEmpId",
       "Type": "GetUserInput",
@@ -64,12 +77,18 @@
       "Parameters": {
         "Prompt": [
           {
-            "Text": "Say or enter your employee ID."
+            "Text": "Please enter your employee ID followed by the pound key."
           }
         ],
-        "InputType": "Speech"
+        "InputType": "DTMF",
+        "DTMFConfiguration": {
+          "MinDigits": 1,
+          "MaxDigits": 10,
+          "TerminationDigit": "#"
+        }
       }
     },
+
     {
       "Identifier": "saveEmpId",
       "Type": "SetAttributes",
@@ -82,6 +101,7 @@
         "NextAction": "confirmEmpId"
       }
     },
+
     {
       "Identifier": "confirmEmpId",
       "Type": "GetUserInput",
@@ -104,6 +124,7 @@
         }
       }
     },
+
     {
       "Identifier": "confirmed",
       "Type": "PlayPrompt",
@@ -118,13 +139,11 @@
         "NextAction": "hangup"
       }
     },
+
     {
       "Identifier": "hangup",
       "Type": "Disconnect",
       "Transitions": {}
     }
-  ],
-  "Metadata": {
-    "Name": "Press-9-Username-EmpID-Flow"
-  }
+  ]
 }
