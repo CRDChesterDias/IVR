@@ -1,0 +1,165 @@
+{
+    "Version": "2019-10-30",
+    "StartAction": "welcome",
+    "Actions": [
+      {
+        "Identifier": "welcome",
+        "Type": "MessageParticipant",
+        "Parameters": {
+          "Text": "Welcome to IVR services. Press 1 for item 1, Press 2 for item 2, Press 3 for item 3, Press 9 for password setup."
+        },
+        "Transitions": {
+          "NextAction": "menu"
+        }
+      },
+      {
+        "Identifier": "menu",
+        "Type": "GetCustomerInput",
+        "Parameters": {
+          "InputTypes": ["DTMF"],
+          "DTMF": {
+            "PressedDigits": "1,2,3,9",
+            "TimeoutSeconds": 5
+          }
+        },
+        "Transitions": {
+          "NextAction": "menu_router",
+          "Errors": "disconnect"
+        }
+      },
+      {
+        "Identifier": "menu_router",
+        "Type": "Branch",
+        "Branches": [
+          {
+            "Condition": "Equals",
+            "Variable": "$.CustomerInput.DTMF",
+            "Value": "1",
+            "NextAction": "disconnect"
+          },
+          {
+            "Condition": "Equals",
+            "Variable": "$.CustomerInput.DTMF",
+            "Value": "2",
+            "NextAction": "disconnect"
+          },
+          {
+            "Condition": "Equals",
+            "Variable": "$.CustomerInput.DTMF",
+            "Value": "3",
+            "NextAction": "disconnect"
+          },
+          {
+            "Condition": "Equals",
+            "Variable": "$.CustomerInput.DTMF",
+            "Value": "9",
+            "NextAction": "username_prompt"
+          }
+        ],
+        "DefaultAction": "disconnect"
+      },
+      {
+        "Identifier": "username_prompt",
+        "Type": "MessageParticipant",
+        "Parameters": {
+          "Text": "Please say your username after the beep. When finished, stay silent."
+        },
+        "Transitions": {
+          "NextAction": "get_username"
+        }
+      },
+      {
+        "Identifier": "get_username",
+        "Type": "GetCustomerInput",
+        "Parameters": {
+          "InputTypes": ["Speech"],
+          "Speech": {
+            "LanguageCode": "en-US"
+          }
+        },
+        "Transitions": {
+          "NextAction": "confirm_username"
+        }
+      },
+      {
+        "Identifier": "confirm_username",
+        "Type": "MessageParticipant",
+        "Parameters": {
+          "Text": "You said: $.CustomerInput.Speech. Press 1 to confirm."
+        },
+        "Transitions": {
+          "NextAction": "confirm_username_input"
+        }
+      },
+      {
+        "Identifier": "confirm_username_input",
+        "Type": "GetCustomerInput",
+        "Parameters": {
+          "InputTypes": ["DTMF"],
+          "DTMF": {
+            "PressedDigits": "1",
+            "TimeoutSeconds": 5
+          }
+        },
+        "Transitions": {
+          "NextAction": "empid_prompt",
+          "Errors": "disconnect"
+        }
+      },
+      {
+        "Identifier": "empid_prompt",
+        "Type": "MessageParticipant",
+        "Parameters": {
+          "Text": "Please enter your employee ID followed by the pound key."
+        },
+        "Transitions": {
+          "NextAction": "get_empid"
+        }
+      },
+      {
+        "Identifier": "get_empid",
+        "Type": "GetCustomerInput",
+        "Parameters": {
+          "InputTypes": ["DTMF"],
+          "DTMF": {
+            "EndOnKey": "#",
+            "TimeoutSeconds": 10
+          }
+        },
+        "Transitions": {
+          "NextAction": "confirm_empid"
+        }
+      },
+      {
+        "Identifier": "confirm_empid",
+        "Type": "MessageParticipant",
+        "Parameters": {
+          "Text": "You entered employee ID $.CustomerInput.DTMF. Press 1 to confirm."
+        },
+        "Transitions": {
+          "NextAction": "confirm_empid_input"
+        }
+      },
+      {
+        "Identifier": "confirm_empid_input",
+        "Type": "GetCustomerInput",
+        "Parameters": {
+          "InputTypes": ["DTMF"],
+          "DTMF": {
+            "PressedDigits": "1",
+            "TimeoutSeconds": 5
+          }
+        },
+        "Transitions": {
+          "NextAction": "disconnect"
+        }
+      },
+      {
+        "Identifier": "disconnect",
+        "Type": "DisconnectParticipant",
+        "Parameters": {},
+        "Transitions": {}
+      }
+    ]
+  }
+  

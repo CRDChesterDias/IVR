@@ -1,0 +1,48 @@
+---
+- name: Create Amazon Connect instance
+  amazon.aws.connect_instance:
+    identity_management_type: SAML
+    inbound_calls_enabled: true
+    outbound_calls_enabled: false
+    contact_flow_logs_enabled: true
+    contact_lens_enabled: false
+    auto_resolve_best_voices_enabled: true
+    instance_alias: "{{ connect_instance_alias }}"
+    region: "{{ aws_region }}"
+  register: connect_instance
+
+- name: Save instance ID
+  set_fact:
+    connect_instance_id: "{{ connect_instance.instance.instance_id }}"
+
+- name: Upload IVR contact flow
+  amazon.aws.connect_contact_flow:
+    instance_id: "{{ connect_instance_id }}"
+    name: "Main-IVR-Flow"
+    type: CONTACT_FLOW
+    description: "IVR with username STT and emp ID capture"
+    content: "{{ lookup('file', 'files/ivr_contact_flow.json') }}"
+    region: "{{ aws_region }}"
+  register: connect_flow
+
+- name: Allocate a phone number
+  amazon.aws.connect_phone_number:
+    target_arn: "{{ connect_instance_id }}"
+    phone_number_country_code: "{{ phone_country }}"
+    phone_number_type: DID
+    region: "{{ aws_region }}"
+  register: phone
+
+- name: Associate phone number with the IVR flow
+  amazon.aws.connect_phone_number:
+    phone_number_id: "{{ phone.phone_number_id }}"
+    target_arn: "{{ connect_instance_id }}"
+    contact_flow_id: "{{ connect_flow.contact_flow_id }}"
+    region: "{{ aws_region }}"
+    state: present
+
+- debug:
+  msg:
+    - "Amazon Connect instance ID: {{ connect_instance_id }}"
+    - "Phone number: {{ phone.phone_number }}"
+    - "IVR Flow ID: {{ connect_flow.contact_flow_id }}"

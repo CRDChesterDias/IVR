@@ -1,0 +1,13 @@
+---
+- name: Deploy Amazon Connect + Contact Flow
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    aws_region: us-east-1
+    connect_instance_alias: "my-new-connect-instance"
+    flow_name: "Press-9-Username-EmpID-Flow"
+
+  roles:
+    - deploy_connect
