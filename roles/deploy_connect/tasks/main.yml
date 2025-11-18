@@ -9,7 +9,10 @@
         --region {{ region }}
   register: instance_create
   changed_when: "'Id' in instance_create.stdout"
-
+- name: Copy JSON
+  copy:
+    src: files/ivr_contact_flow.json
+    dest: /tmp/ivr_contact_flow.json
 - name: Parse instance ID
   set_fact:
     instance_id: "{{ instance_create.stdout | from_json | json_query('Id') }}"
@@ -23,7 +26,7 @@
         --instance-id {{ instance_id }} \
         --name "{{ flow_name }}" \
         --type CONTACT_FLOW \
-        --content file://file/ivr_contact_flow.json \
+        --content file:///tmp/ivr_contact_flow.json \
         --region {{ region }}
   register: flow_upload
 
