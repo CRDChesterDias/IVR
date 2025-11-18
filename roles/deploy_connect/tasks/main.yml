@@ -20,6 +20,13 @@
 - debug:
     msg: "Connect instance created. ID = {{ instance_id }}"
 
+- name: Wait for Connect instance to be active
+  command: aws connect describe-instance --instance-id {{ connect_instance_id }} --region us-east-1
+  register: instance_status
+  retries: 20
+  delay: 30
+  until: "'IN_PROGRESS' not in instance_status.stdout and instance_status.rc == 0"
+  
 - name: Upload Contact Flow (IVR)
   shell: |
     aws connect create-contact-flow \
