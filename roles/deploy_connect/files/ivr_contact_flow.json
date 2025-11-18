@@ -85,3 +85,46 @@
     {
       "Identifier": "confirmEmpId",
       "Type": "GetUserInput",
+      "Transitions": {
+        "NextAction": "confirmed",
+        "Errors": "hangup",
+        "NoMatch": "confirmEmpId"
+      },
+      "Parameters": {
+        "Prompt": [
+          {
+            "Text": "Press 1 to confirm your employee ID."
+          }
+        ],
+        "InputType": "DTMF",
+        "DTMFConfiguration": {
+          "MinDigits": 1,
+          "MaxDigits": 1,
+          "Inclusion": "1"
+        }
+      }
+    },
+    {
+      "Identifier": "confirmed",
+      "Type": "PlayPrompt",
+      "Parameters": {
+        "Prompt": [
+          {
+            "Text": "Thank you. Your identity is confirmed."
+          }
+        ]
+      },
+      "Transitions": {
+        "NextAction": "hangup"
+      }
+    },
+    {
+      "Identifier": "hangup",
+      "Type": "Disconnect",
+      "Transitions": {}
+    }
+  ],
+  "Metadata": {
+    "Name": "Press-9-Username-EmpID-Flow"
+  }
+}
